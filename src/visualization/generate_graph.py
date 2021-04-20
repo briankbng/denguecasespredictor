@@ -3,65 +3,74 @@
 ###################################################################################
 # Installation
 ###################################################################################
-# pip install streamlit
-# pip install altair vega_datasets (Note: No need to run this)
+# pip install bokeh
 
 ###################################################################################
 # streamlit run /home/ai-user/Documents/Demo/generate_graph.py
 
 import os
-import numpy as np
 import pandas as pd
-import streamlit as st
-import altair as alt
 
-st.write("""
-# Dengue Predictor
-Prediction Date Range: *world!* to *world!*
-""")
+from bokeh.plotting import figure, output_file, show
+from bokeh.embed import components
+ 
+def getHistDengueCases(startDate, endDate):
+    
+    print ('startDate: '+startDate)
+    print ('endDate  : '+endDate)
+    
+    path = '/home/ai-user/Documents/Demo'
+    os.chdir(path)
+    df=pd.read_csv("dengue_cases_2014to2018.csv", header=0, parse_dates=['date'])
+    #df.info()
+    newDf = (df['date'] >= startDate) & (df['date'] <= endDate)
+    histCases = df.loc[newDf]
+    return histCases
+    
+def getPredDengueCases(startDate, endDate):
+    
+    print ('startDate: '+startDate)
+    print ('endDate  : '+endDate)
+    
+    path = '/home/ai-user/Documents/Demo'
+    os.chdir(path)
+    df=pd.read_csv("Prediction 2015.csv", header=0, parse_dates=['date'])
+    #df.info()
+    newDf = (df['date'] >= startDate) & (df['date'] <= endDate)
+    predCases = df.loc[newDf]
+    return predCases
 
-path = '/home/ai-user/Documents/Demo'
-os.chdir(path)
-data2015=pd.read_csv("Dengue Cases 2015.csv", header=0, parse_dates=['Date'])
-#data2015.info()
-pred2015=pd.read_csv("Prediction 2015.csv", header=0, parse_dates=['Date'])
-#pred2015.info()
-data2016=pd.read_csv("Dengue Cases 2016.csv", header=0, parse_dates=['Date'])
-#data2016.info()
+def generateGraphForHistoricalAndPredictedDengueCases(startDate, endDate, predCases):
+    histCases=getHistDengueCases(startDate, endDate)
+    print('*** HistCases ***')
+    print(histCases)
+   
+    output_file("graph.html")
+    
+    # create a new plot with a datetime axis type
+    p = figure(plot_width=800, plot_height=300, x_axis_type="datetime")
+    #p = figure(plot_width=800, plot_height=250, x_axis_type="datetime", tools='xwheel_pan', active_scroll='xwheel_pan')
+    
+    p.line(histCases['date'], histCases['cases'], color='navy', alpha=0.5)
+    p.line(predCases['date'], predCases['cases'], color='red', alpha=0.5)
+    show(p)
+    return components(p)
 
-data2015 = data2015.set_index('Date')
-pred2015 = pred2015.set_index('Date')
-data2016 = data2016.set_index('Date')
 
-#st.line_chart(data2015)
-#st.line_chart(pred2015)
+predCases=getPredDengueCases('10-11-2015', '10-15-2015') # Simulate Pred cases
+print('*** PredCases ***')
+print(predCases)
+print('')
+script, div = generateGraphForHistoricalAndPredictedDengueCases('10-01-2015', '10-30-2015', predCases)
 
-result = data2015.join(pred2015, how='outer', on='Date', lsuffix='_Actual', rsuffix='_Predicted')
-#result
-st.line_chart(result)
+print('*** script ***')
+print(script)
+print('')
 
-# ***************************************
-st.write("Chart 2")
-chart_data = pd.DataFrame(
-    np.random.randn(20, 3),
-    columns=['Actual', 'Predicted', 'Rainfall'])
-st.line_chart(chart_data)
+print('*** div ***')
+print(div)
+print('')
 
-# ***************************************
-st.write("Chart 3")
-df = pd.DataFrame({
-    'name': ['tom', 'dominik', 'patricia'],
-    'age': [20, 30, 40],
-    'salary': [100, 200, 300]
-})
+####################################################
 
-a = alt.Chart(df).mark_area(opacity=1).encode(
-    x='name', y='age')
-
-b = alt.Chart(df).mark_line(opacity=0.6).encode(
-    x='name', y='salary')
-
-c = alt.layer(a, b)
-
-st.altair_chart(c, use_container_width=True)
 
