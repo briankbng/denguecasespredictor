@@ -17,6 +17,7 @@
         <br/>
         <div class="container">
             <h2 align="center">Select Start Date and End Date for the Dengue Cases Prediction</h2>
+            <h2 align="center">(Range: 2016-12-16 to 2021-04-20)</h2>
             <br/>
             <br/>
             <div class="col-md-2">
@@ -61,6 +62,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
         <!-- Script -->
         <script>
+        var iAmGlobal = 0;
         $(document).ready(function(){
             $.datepicker.setDefaults({
                 dateFormat: 'yy-mm-dd'
@@ -84,17 +86,23 @@
                             $('#predict_dengue').append(data.htmlresponse);
                         }
                     });
-                    $.ajax({
-                        url:"/range",
-                        method:"POST",
-                        data:{From:From, to:to},
-                        success:function(data)
-                        {
-                            $('#predict_dengue').html(data);
-                            $('#predict_dengue').append(data.htmlresponse);
-                        }
-                    });
-                }
+                    if(iAmGlobal == 0)
+                    {
+                        $.ajax({
+                            url:"/range",
+                            method:"POST",
+                            data:{From:From, to:to},
+                            success:function(data)
+                            {
+                                $('#predict_dengue').html(data);
+                                //setTimeout(1000);
+                                $('#predict_dengue').append(data.htmlresponse);
+                                iAmGlobal = 1;
+                            }
+                        });
+                    }
+                    
+                 }
                 else
                 {
                     alert("Please Select the Date");
