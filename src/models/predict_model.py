@@ -46,16 +46,18 @@ class CaseReasoner:
             logging.info("Loading Model")
             self.model = pickle.load(open(model_path, 'rb'))
         else:
-            raise FileNotFoundError("Prediction Model path not exist, please check path or model")
+            raise FileNotFoundError(
+                "Prediction Model path not exist, please check path or model")
 
     def __repr__(self):
         return f"Dengue Case Reasoner with model: {self.model}."
 
     def predict(self, row_of_data: list) -> int:
-        if type(row_of_data) is list and len(row_of_data) != 1:
+        if isinstance(row_of_data, list) and len(row_of_data) != 1:
             array = np.array(row_of_data).reshape(1, -1)
         else:
-            raise ValueError("Input data must a list of feature values, length must > 1")
+            raise ValueError(
+                "Input data must a list of feature values, length must > 1")
         return self.model.predict(array)
 
     # produce range prediction, such as within this week, how many cases.

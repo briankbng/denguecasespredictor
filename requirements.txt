@@ -5,3 +5,4 @@ numpy~=1.19.2
 scikit-learn~=0.23.2
 click~=7.1.2
 lightgbm~=3.1.1
+flask~=0.12.2

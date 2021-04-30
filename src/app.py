@@ -3,6 +3,7 @@
 # External package imports.
 # =============================================================================
 import os
+import time
 import datetime
 import logging
 
@@ -15,6 +16,7 @@ from flask_wtf import Form
 from wtforms import DateField
 
 logging.basicConfig(level=logging.INFO)
+
 
 # Internal package imports.
 # =============================================================================
@@ -34,6 +36,56 @@ Bootstrap(app)
 # =============================================================================
 
 # Utilities
+def createDengueCasesPlot(From='2020-01-01', to='2020-05-01'):
+    
+        predict_cases = list()
+
+        # Converts date string to python datetime.
+        startDate = datetime.datetime.strptime(From, '%Y-%m-%d')
+        endDate = datetime.datetime.strptime(to, '%Y-%m-%d')
+
+        next_day = startDate
+        # Iterate from start date to end date and predict the dengue cases
+        # base on the known forecast weather data.
+        # Note: Should the prediction use the weather forecast data of 1 week ago?
+        while True:
+            if next_day > endDate:
+                break
+
+            dateStr = next_day.strftime("%Y-%m-%d")
+
+            predict_case = dict()
+            value = []
+
+            if dateStr in FORECAST_WEATHER.keys():
+                value = FORECAST_WEATHER[dateStr]
+
+                weatherInfo = [value[0], value[1], value[2], value[3], value[4], value[5]]
+
+                num_cases = int(reasoner.predict(weatherInfo))
+
+                predict_case['date'] = dateStr
+                predict_case['cases'] = num_cases
+
+                predict_cases.append(predict_case)
+
+            next_day += datetime.timedelta(days=1)       
+
+        # print(predict_cases)
+        # Converts the predicted cases from Dict to Pandas dataframe
+        predict_cases_df = pd.DataFrame.from_dict(predict_cases)
+         
+        # To show longer date ranges, it is best to hide weather conditions
+        p = plotGraph.generateGraphForActualAndPredictedDengueCases(
+                From,               # startDate YYYY-MM-DD
+                to,                 # endDate YYYY-MM-DD
+                predict_cases_df,   # List of Predicted Cases
+                bool(True))         # Hide weather conditions
+
+        script, div =  components(p) 
+        return script, div, predict_cases
+
+
 
 def getForeCastedWeather():
 
@@ -75,26 +127,28 @@ def add_headers(response):
 
 @app.route('/')
 def index():
-    forecastWeatherData = []
-    dayWeatherData = dict()
 
-    for key, value in FORECAST_WEATHER.items():
+    # script, div, predict_cases = createDengueCasesPlot()
 
-        dayWeatherData['date'] = key
-        dayWeatherData['mean_temp'] = value[0]
-        dayWeatherData['max_temp'] = value[1]
-        dayWeatherData['min_temp'] = value[2]
-        dayWeatherData['humidity'] = value[3]
-        dayWeatherData['mean_rain_fall'] = value[4]
-        dayWeatherData['mean_wind'] = value[5]
-        forecastWeatherData.append(dayWeatherData)
+    # forecastWeatherData = []
+    # dayWeatherData = dict()
 
-    return render_template('index.html', forecastWeatherData=forecastWeatherData)
+    # for key, value in FORECAST_WEATHER.items():
+    #     dayWeatherData['date'] = key
+    #     dayWeatherData['mean_temp'] = value[0]
+    #     dayWeatherData['max_temp'] = value[1]
+    #     dayWeatherData['min_temp'] = value[2]
+    #     dayWeatherData['humidity'] = value[3]
+    #     dayWeatherData['mean_rain_fall'] = value[4]
+    #     dayWeatherData['mean_wind'] = value[5]
+    #     forecastWeatherData.append(dayWeatherData)
+
+    return render_template('index.html')
 
 @app.route("/range",methods=["POST","GET"])
 def range(): 
  
-    predict_cases = list()
+    # predict_cases = list()
 
     print(request.method)
 
@@ -104,61 +158,14 @@ def range():
         print(From)
         print(to)
 
-        # Converts date string to python datetime.
-        startDate = datetime.datetime.strptime(From, '%Y-%m-%d')
-        endDate = datetime.datetime.strptime(to, '%Y-%m-%d')
+        script, div, predict_cases = createDengueCasesPlot(From=From, to=to)
 
-        next_day = startDate
-        # Iterate from start date to end date and predict the dengue cases
-        # base on the known forecast weather data.
-        # Note: Should the prediction use the weather forecast data of 1 week ago?
-        while True:
-            if next_day > endDate:
-                break
-            
-            dateStr = next_day.strftime("%Y-%m-%d")
-
-            predict_case = dict()
-            value = []
-
-            if dateStr in FORECAST_WEATHER.keys():
-                value = FORECAST_WEATHER[dateStr]
-
-                weatherInfo = [value[0], value[1], value[2], value[3], value[4], value[5]]
-                num_cases = int(reasoner.predict(weatherInfo))
-
-                predict_case['date'] = dateStr
-                predict_case['cases'] = num_cases
-                predict_cases.append(predict_case)
-
-            next_day += datetime.timedelta(days=1)       
-
-        # print(predict_cases)
-        # Converts the predicted cases from Dict to Pandas dataframe
-        predict_cases_df = pd.DataFrame.from_dict(predict_cases)
-         
-        # To show longer date ranges, it is best to hide weather conditions
-        p = plotGraph.generateGraphForActualAndPredictedDengueCases(
-                From,               # startDate YYYY-MM-DD
-                to,                 # endDate YYYY-MM-DD
-                predict_cases_df,   # List of Predicted Cases
-                bool(True))         # Hide weather conditions
-
-        
-        # print(predict_cases_df)
-
-        script, div = components(p)
-
-        # print(script)
-
-        return render_template('response.html', predict_cases=predict_cases, the_div=div, the_script=script)
-    
-        # return jsonify({'htmlresponse': render_template('response.html', predict_cases=predict_cases, the_div=div, the_script=script)})
+        return jsonify({'htmlresponse': render_template('response.html', predict_cases=predict_cases, the_div=div, the_script=script)})
  
 if __name__ == "__main__":
    
     # Set the prediction model to use.
-    predict_model = MODEL_PKL
+    predict_model = MODEL_LT_GBM
     
     # Get the forecasted weather data.
     FORECAST_WEATHER = getForeCastedWeather()

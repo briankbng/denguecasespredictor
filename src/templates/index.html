@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            .divScroll {
+                overflow:scroll;
+                height:600px;
+                width:1200px;
+            }
+        </style>
+        <title>Dengue Cases Prediction</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css"/>
+    </head>
+    <body>
+        <br/>
+        <div class="container">
+            <h2 align="center">Select Start Date and End Date for the Dengue Cases Prediction</h2>
+            <br/>
+            <br/>
+            <div class="col-md-2">
+                <input type="text" name="From" id="From" class="form-control" placeholder="From Date"/>
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="to" id="to" class="form-control" placeholder="To Date"/>
+            </div>
+            <div class="col-md-8">
+                <input type="button" name="range" id="range" value="Range" class="btn btn-success"/>
+            </div>
+            <div class="clearfix"></div>
+            <br/>       
+            <div id="predict_dengue"> <!--class="divScroll"-->
+                <!--
+                <table class="table table-bordered">
+                    <tr>
+                        <th width="10%">date</th>
+                        <th width="10%">mean_temp</th>
+                        <th width="10%">max_temp</th>
+                        <th width="10%">min_temp</th>
+                        <th width="10%">humidity</th>
+                        <th width="10%">mean_rain_fall</th>
+                        <th width="10%">mean_wind</th>
+                    </tr>
+                    {% for row in forecastWeatherData %}
+                        <tr>
+                        <td>{{row.date}}</td>
+                        <td>{{row.mean_temp}}</td>
+                        <td>{{row.max_temp}}</td>
+                        <td>{{row.min_temp}}</td>
+                        <td>{{row.humidity}}</td>
+                        <td>{{row.mean_rain_fall}}</td>
+                        <td>{{row.mean_wind}}</td>    
+                        </tr>
+                    {% endfor %}
+                </table>
+                -->
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+        <!-- Script -->
+        <script>
+        $(document).ready(function(){
+            $.datepicker.setDefaults({
+                dateFormat: 'yy-mm-dd'
+            });
+            $(function(){
+                $("#From").datepicker();
+                $("#to").datepicker();
+            });
+            $('#range').click(function(){
+                var From = $('#From').val();
+                var to = $('#to').val();
+                if(From != '' && to != '')
+                {
+                    $.ajax({
+                        url:"/range",
+                        method:"POST",
+                        data:{From:From, to:to},
+                        success:function(data)
+                        {
+                            $('#predict_dengue').html(data);
+                            $('#predict_dengue').append(data.htmlresponse);
+                        }
+                    });
+                    $.ajax({
+                        url:"/range",
+                        method:"POST",
+                        data:{From:From, to:to},
+                        success:function(data)
+                        {
+                            $('#predict_dengue').html(data);
+                            $('#predict_dengue').append(data.htmlresponse);
+                        }
+                    });
+                }
+                else
+                {
+                    alert("Please Select the Date");
+                }
+            });
+        });
+        </script>
+    </body>
+</html>
