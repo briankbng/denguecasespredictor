@@ -55,3 +55,18 @@ Project Organization
 --------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+
+
+Other references:
+
+FLASK example:
+    https://medium.com/bhavaniravi/build-your-1st-python-web-app-with-flask-b039d11f101c
+    https://realpython.com/flask-by-example-part-1-project-setup/
+
+Integration of Bokeh visualization with Flask
+    https://www.fullstackpython.com/blog/responsive-bar-charts-bokeh-flask-python-3.html
+
+Bokeh documentation
+    https://bokeh.org/
+    https://docs.bokeh.org/en/latest/docs/gallery/stocks.html
+    https://docs.bokeh.org/en/latest/docs/gallery.html
