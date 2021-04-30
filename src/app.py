@@ -13,10 +13,8 @@ from bokeh.embed import components
 from flask import Flask, render_template, request, jsonify, flash, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form
-from wtforms import DateField
 
 logging.basicConfig(level=logging.INFO)
-
 
 # Internal package imports.
 # =============================================================================
