@@ -12,22 +12,20 @@ DATA_DIR = Path.joinpath(ROOT_DIR, 'data')
 # This is the project processed data path.
 PROCESSED_DATA_DIR = Path.joinpath(DATA_DIR, 'processed')
 
-
 # The path name of the Decision Tree Regressor Model for the Dengue cases prediction.
 # This is a pickle object.
 MODEL_DT_REGRESSOR = Path.joinpath(MODELS_DIR, 'DecisionTreeRegressor.model')
 
 # The path name of the Light GBM Model for the Dengue cases prediction.
 # This is a pickle object.
-MODEL_LT_GBM = Path.joinpath(MODELS_DIR, 'lightGBM_APR_2021')    
+MODEL_LT_GBM = Path.joinpath(MODELS_DIR, 'lightGBM_APR_2021')
 
 # The path name of the pkl model for the Dengue cases prediction.
 MODEL_PKL = Path.joinpath(MODELS_DIR, 'model.pkl')
 
 # The path name of the forecasted westher data for Dengue case prediction.
 # FORECAST_WEATHER_CSV = Path.joinpath(PROCESSED_DATA_DIR, 'forecastedWeatherInfo.csv')
-FORECAST_WEATHER_CSV = Path.joinpath(PROCESSED_DATA_DIR, 'forecastedWeatherInfoFull.csv')  
-
+FORECAST_WEATHER_CSV = Path.joinpath(PROCESSED_DATA_DIR, 'forecastedWeatherInfoFull.csv')
 
 # The path name to the cleaned csv data for the model training.
 PROCESSED_TRAIN_DATA = Path.joinpath(PROCESSED_DATA_DIR, 'cleaned.csv')
@@ -38,8 +36,6 @@ SRC_ROOT = Path(__file__).parent
 
 # Tha path name of the visualization package
 SRC_VIS_ROOT = Path.joinpath(SRC_ROOT, 'visualization')
-
-
 
 #
 # Use below if you want to import definitions at the module package path level.

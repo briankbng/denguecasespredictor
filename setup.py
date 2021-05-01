@@ -15,7 +15,7 @@ requires = [
     "pathlib~=1.0.1"
 ]
 
-setup (
+setup(
     name='DenguePredictor',
     version='0.1.0',
     description='Dengue Daily Case Predictor based on weather info',

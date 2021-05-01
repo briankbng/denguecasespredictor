@@ -1,44 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <style>
-      .divScroll {
-          overflow:scroll;
-          height:600px;
-          width:1200px;
-      }
-  </style>
+        .divScroll {
+            overflow: scroll;
+            height: 600px;
+            width: 1200px;
+        }
+    </style>
     <title>Predicted Dengue Cases with Bokeh!</title>
     <!-- <link href="http://cdn.bokeh.org/bokeh/release/bokeh-2.3.1.min.css" rel="stylesheet" type="text/css"> -->
     <!-- <link href="http://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.1.min.css" rel="stylesheet" type="text/css"> -->
     <!--<link href="http://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.1.min.css" rel="stylesheet" type="text/css">-->
 </head>
-  <body>
-    <h1>Dengue Cases</h1>
-    <div>
+<body>
+<h1>Dengue Cases</h1>
+<div>
     {{ the_div|safe }}
     <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.1.min.js" crossorigin="anonymous"></script>
     <!-- <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.1.min.js" crossorigin="anonymous"></script> -->
     <!--<script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.1.min.js" crossorigin="anonymous"></script>-->
     {{ the_script|safe }}
-  </div>
-    <div>
+</div>
+<div>
     <table class="table table-bordered">
-      <tr>
-          <th width="3.4%">Date</th>
-          <th width="5%">Number of Predicted Cases</th>
-      </tr>
-      </table>
-    </div>
-    <div class="divScroll" >
-    <table class="table table-bordered">
-      {% for row in predict_cases %}
-          <tr>
-          <td width="3%">{{row.date}}</td>
-          <td width="5%">{{row.cases}}</td>
-          </tr>
-      {% endfor %}
+        <tr>
+            <th width="3.4%">Date</th>
+            <th width="5%">Number of Predicted Cases</th>
+        </tr>
     </table>
-    </div>div>
-  </body>
+</div>
+<div class="divScroll">
+    <table class="table table-bordered">
+        {% for row in predict_cases %}
+        <tr>
+            <td width="3%">{{row.date}}</td>
+            <td width="5%">{{row.cases}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+div>
+</body>
 </html>
