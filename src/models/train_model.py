@@ -29,12 +29,13 @@ def train_model(features, label):
     return lgb
 
 
-def main():
-    X, y = load_data(path='../../data/processed/cleaned.csv')
+def main(data_path: str, model_path: str):
+    X, y = load_data(path=data_path)
     model = train_model(features=X, label=y)
     logging.info("Writing Model to disk")
-    pickle.dump(model, open('../../models/lightGBM_APR_2021', 'wb'))
+    pickle.dump(model, open(model_path, 'wb'))
 
 
 if __name__ == '__main__':
-    main()
+    main(data_path='../../data/processed/cleaned_RF_corrected_MA_Last_LN_added.csv',
+         model_path='../../models/lightGBM_MAY_2021')
