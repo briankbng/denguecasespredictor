@@ -74,5 +74,5 @@ class CaseReasoner:
 if __name__ == '__main__':
     model_path = '/Users/johnnylu/Documents/NUS_ISS_Program/denguecasespredictor/models/lightGBM_APR_2021'
     reasoner = CaseReasoner(model_path)
-    test_data = [28.69, 34.3, 24.7, 77.55, 0.00, 4.16]
-    print(float(reasoner.predict(test_data)))
+    # test_data = [28.69, 34.3, 24.7, 77.55, 0.00, 4.16]
+    # print(float(reasoner.predict(test_data)))
